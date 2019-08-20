@@ -31,34 +31,10 @@ module Api
                 @receiver = User.find_by(emai: transfer_params[:email])
                 transfer_uid = SecureRandom.uuid
 
-                sender_new_balance = @sender.balance - transfer_params[:balance];
-                withdrawal = Transaction.create(
-                    user_id: @sender.id,
-                    transfer_uid: transfer_uid,
-                    amount: transfer_params[:amount],
-                    category: "withdrawal",
-                    status: "pending",
-                )
-                receiver_new_balance = @receiver.balance + transfer_params[:amount]
-                deposit = Transaction.create(
-                    user_id: @receiver.id,
-                    transfer_uid: transfer_uid,
-                    amount: transfer_params[:amount],
-                    category: "deposit",
-                    status: "pending",
-                )
-                @receiver.update(balance: receiver_new_balance)
-                deposit.update(status: "processed")
-                @sender.update(balance: sender_new_balance);
-                withdrawal.update(status: "processed")
-                
-
-
-                render json:{
-                    message: "Transfer requested",
-                    amount: transfer_params[:amount],
-                    email: transfer_params[:email]
-                }
+                @receiver.deposit(transfer_params[:amoiunt], transfer_uid);
+                @sender.withdrawal(transfer_params[:amoiunt], transfer_uid)
+               
+                render json: @sender
             end
 
             private

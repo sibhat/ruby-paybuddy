@@ -5,3 +5,5 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+User.create!(name: "Jane Doe", email: "jane@example.com", balance: 10_000, api_key: SecureRandom.uuid)
+User.create!(name: "John Doe", email: "john@example.com", balance: 5_000, api_key: SecureRandom.uuid)

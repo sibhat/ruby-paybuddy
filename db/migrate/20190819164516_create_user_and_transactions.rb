@@ -9,7 +9,7 @@ class CreateUserAndTransactions < ActiveRecord::Migration[6.0]
     end
 
     create_table :transactions do |t|
-      t.belong_to :user, index: true
+      t.belongs_to :user, index: true
       t.string :transfer_uid, index: true
       t.integer :amount, null: false
       t.string :category, null: false
