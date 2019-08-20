@@ -1,7 +1,7 @@
 module Api
     module V1
         class UsersController < ApplicationController
-            before_action :authenticate_user!, except: [:create]
+            before_action :authenticate_user!, except: [:create, :index]
             before_action :authorize_user!, only: [:update, :transfer]
 
             def index
@@ -29,12 +29,11 @@ module Api
             def transfer
                 @sender = User.find(params[:id])
                 @receiver = User.find_by(emai: transfer_params[:email])
-                transfer_uid = SecureRandom.uuid
+                TransferService(@sender, @receiver, transfer_params[:amount]).process!
 
-                @receiver.deposit(transfer_params[:amoiunt], transfer_uid);
-                @sender.withdrawal(transfer_params[:amoiunt], transfer_uid)
-               
                 render json: @sender
+            rescue TransferService::TransferError => e
+                render json: {error: "error message", message: e.message}, status: :unprocessed_entity
             end
 
             private
